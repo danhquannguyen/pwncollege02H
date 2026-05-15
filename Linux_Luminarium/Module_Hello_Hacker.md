@@ -30,7 +30,7 @@
   2. Hệ thống thực thi nó và xuất ra các kết quả.
 
   Thông thường, một lệnh sẽ chứa một chương tình và các tham số cho chương trình đó, được phân tách bằng khoảng trắng.
-     
+    
   ```sh
   yans@asdf ~ cat flag
   pwn_college{1337}
