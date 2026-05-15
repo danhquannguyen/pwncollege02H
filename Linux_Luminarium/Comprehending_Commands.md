@@ -545,5 +545,6 @@
 
   * Được rồi, bây giờ bạn hãy thử xem! Trong cấp độ này, cờ (flag), như thường lệ, nằm ở `/flag`, nhưng chương trình `/challenge/catflag` thay vào đó sẽ đọc tệp `/home/hacker/not-the-flag`. Hãy sử dụng symlink, và đánh lừa nó để nó cấp cho bạn cờ!
 
+  * <img width="548" height="186" alt="image" src="https://github.com/user-attachments/assets/5ce69de1-759e-4024-8d79-56517f6713ed" />
 
 </details>
