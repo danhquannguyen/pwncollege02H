@@ -390,7 +390,7 @@
 
   * **A deeper look at files**
 
-    Có nhiều loại tệp khác nhau. Bạn có thể sử dụng lệnh ls -ld /path/to/your/file để kiểm tra.
+    Có nhiều loại tệp khác nhau. Bạn có thể sử dụng lệnh `ls -ld /path/to/your/file` để kiểm tra.
 
     ```sh
     yans@asdf ~ $ ls -ld /home/yans/flags
