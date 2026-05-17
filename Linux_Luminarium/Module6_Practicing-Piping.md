@@ -496,7 +496,8 @@
 
  * GỢI Ý: Hành vi chặn (blocking) của FIFO làm cho việc giải quyết thử thách này trong một terminal (thiết bị đầu cuối) duy nhất trở nên khó khăn. Bạn có thể sẽ muốn sử dụng chế độ Desktop hoặc VSCode cho thử thách này để bạn có thể khởi chạy hai terminal.
 
- * 
+ * <img width="1082" height="1239" alt="image" src="https://github.com/user-attachments/assets/1f3325d7-a5e1-44bf-8886-4c2461729318" />
+
 
 
 </details>
