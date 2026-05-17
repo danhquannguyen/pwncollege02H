@@ -276,3 +276,227 @@
 
 </details>
 
+
+<details>
+ <summary>🏴 <code>Procss substitution for input</code></summary>
+
+ * Đôi khi bạn cần so sánh đầu ra (output) của hai lệnh thay vì so sánh hai tệp tin. Bạn có thể nghĩ đến việc lưu mỗi đầu ra vào một tệp trước:
+
+   ```bash
+   hacker@dojo:~$ command1 > file1
+   hacker@dojo:~$ command2 > file2
+   hacker@dojo:~$ diff file1 file2
+   ```
+
+ * Nhưng có một cách thanh lịch hơn! Linux tuân theo triết lý rằng "mọi thứ đều là tệp". Nghĩa là, hệ thống cố gắng cung cấp khả năng truy cập giống như tệp đối với hầu hết các tài nguyên, bao gồm cả đầu vào (input) và đầu ra của các chương trình đang chạy! Shell cũng tuân theo triết lý này, cho phép bạn — ví dụ — sử dụng bất kỳ tiện ích nào chấp nhận các đối số là tệp trên dòng lệnh và kết nối nó với đầu ra của các chương trình, như bạn đã học trong vài cấp độ vừa qua.
+
+ * Thú vị là, chúng ta có thể tiến xa hơn, và kết nối đầu vào cũng như đầu ra của các chương trình vào các đối số của lệnh. Điều này được thực hiện bằng cách sử dụng Thay thế Tiến trình (Process Substitution). Để đọc từ một lệnh (thay thế tiến trình đầu vào), hãy sử dụng `<(lệnh)`. Khi bạn viết `<(lệnh)`, bash sẽ chạy lệnh đó và kết nối đầu ra của nó với một tệp tạm thời mà nó sẽ tạo ra. Tất nhiên, đây không phải là một tệp thực sự, nó được gọi là một named pipe (đường ống có tên), theo nghĩa là nó có một tên tệp:
+
+   ```sh
+   hacker@dojo:~$ echo <(echo hi)
+   /dev/fd/63
+   ```
+
+ * `/dev/fd/63` từ đâu đến? bash đã thay thế `<(echo hi)` bằng đường dẫn của tệp named pipe được kết nối với đầu ra của lệnh! Trong khi lệnh đang chạy, việc đọc từ tệp này sẽ đọc dữ liệu từ đầu ra tiêu chuẩn (standard output) của lệnh đó. Thông thường, điều này được thực hiện bằng các lệnh nhận tệp đầu vào làm đối số:
+
+   ```sh
+   hacker@dojo:~$ cat <(echo hi)
+   hi
+   ```
+
+ * Tất nhiên, bạn có thể chỉ định điều này nhiều lần:
+
+   ```sh
+   hacker@dojo:~$ echo <(echo pwn) <(echo college)
+   /dev/fd/63 /dev/fd/64
+   hacker@dojo:~$ cat <(echo pwn) <(echo college)
+   pwn
+   college
+   ```
+   
+ * Bây giờ là thử thách dành cho bạn! Hãy nhớ lại những gì bạn đã học trong thử thách `diff` từ phần Comprehending Commands. Trong thử thách đó, bạn đã so sánh sự khác biệt (diff) giữa hai tệp. Bây giờ, bạn sẽ so sánh sự khác biệt giữa hai tập hợp đầu ra của lệnh: `/challenge/print_decoys`, lệnh này sẽ in ra một loạt các cờ giả (decoy flags), và `/challenge/print_decoys_and_flag`, lệnh này sẽ in ra chính những cái cờ giả đó cộng thêm lá cờ thật.
+
+ * Hãy sử dụng Thay thế Tiến trình (__Process Substitution__) với lệnh `diff` để so sánh đầu ra của hai chương trình này và tìm ra lá cờ của bạn!
+
+ * <img width="981" height="164" alt="image" src="https://github.com/user-attachments/assets/35178b75-bfcd-42b9-95f4-e30e3add5c00" />
+
+</details>
+
+
+<details>
+ <summary>🏴 <code>Writing to multiple programs</code></summary>
+
+ * Giờ đây bạn đã học được rằng thay thế tiến trình (process substitution) có thể khiến đầu ra của lệnh xuất hiện dưới dạng các tệp để đọc bằng cách dùng `<(lệnh)`. Nhưng bạn cũng có thể sử dụng thay thế tiến trình để ghi vào các lệnh!
+
+ * Bạn có thể nhân bản dữ liệu vào hai tệp bằng lệnh `tee`:
+
+   ```sh
+   hacker@dojo:~$ echo HACK | tee THE > PLANET
+   hacker@dojo:~$ cat THE
+   HACK
+   hacker@dojo:~$ cat PLANET
+   HACK
+   ```
+
+ * Và bạn đã từng sử dụng `tee` để nhân bản dữ liệu vào một tệp và một lệnh:
+
+   ```sh
+   hacker@dojo:~$ echo HACK | tee THE | cat
+   HACK
+   hacker@dojo:~$ cat THE
+   HACK
+   ```
+   
+ * Nhưng còn việc nhân bản vào hai lệnh thì sao? Như lệnh `tee` đã nêu trong trang hướng dẫn (manpage), nó được thiết kế để ghi vào các tệp và đầu ra tiêu chuẩn (standard output):
+
+   ```bash
+   TEE(1)                          User Commands                            TEE(1)
+   NAME
+         tee - đọc từ đầu vào tiêu chuẩn và ghi vào đầu ra tiêu chuẩn và các tệp
+   ```
+   
+ * Nhưng chờ đã! Bạn vừa học được rằng bash có thể khiến các lệnh trông giống như các tệp bằng cách sử dụng thay thế tiến trình! Để ghi vào một lệnh (thay thế tiến trình đầu ra), hãy sử dụng `>(lệnh)`. Nếu bạn viết một đối số là `>(rev)`, bash sẽ chạy lệnh `rev` (lệnh này đọc dữ liệu từ đầu vào tiêu chuẩn, đảo ngược thứ tự của nó và ghi vào đầu ra tiêu chuẩn!), nhưng kết nối đầu vào của nó với một tệp mang tên "đường ống có tên" (named pipe) tạm thời. Khi các lệnh khác ghi vào tệp này, dữ liệu sẽ đi vào đầu vào tiêu chuẩn của lệnh đó:
+
+   ```sh
+   hacker@dojo:~$ echo HACK | rev
+   KCAH
+   hacker@dojo:~$ echo HACK | tee >(rev)
+   HACK
+   KCAH
+   ```
+
+ * Ở ví dụ trên, chuỗi sự kiện sau đây đã diễn ra:
+
+   * `bash` khởi chạy lệnh `rev`, kết nối một đường ống có tên (có lẽ là `/dev/fd/63`) vào đầu vào tiêu chuẩn của `rev`.
+
+   * `bash` khởi chạy lệnh `tee`, kết nối một đường ống vào đầu vào tiêu chuẩn của nó, và thay thế đối số đầu tiên của `tee` bằng `/dev/fd/63`. Lệnh `tee` thậm chí chưa bao giờ nhìn thấy đối số `>(rev)`; shell đã thay thế nó trước khi khởi chạy `tee`.
+
+   * `bash` sử dụng lệnh tích hợp (builtin) `echo` để in `HACK` vào đầu vào tiêu chuẩn của `tee`.
+
+   * `tee` đọc `HACK`, ghi nó vào đầu ra tiêu chuẩn, sau đó ghi nó vào `/dev/fd/63` (nơi được kết nối với đầu vào tiêu chuẩn của `rev`).
+
+   * `rev` đọc `HACK` từ đầu vào tiêu chuẩn của nó, đảo ngược nó và ghi `KCAH` ra đầu ra tiêu chuẩn.
+
+ * Bây giờ đến lượt bạn! Trong thử thách này, chúng ta có các lệnh `/challenge/hack`, `/challenge/the`, và `/challenge/planet`. Hãy chạy lệnh `/challenge/hack`, và nhân bản đầu ra của nó để làm đầu vào cho cả hai lệnh `/challenge/the` và `/challenge/planet`! Hãy cuộn lại các thử thách trước đó là "Duplicating piped data with tee" và "Process substitution for input" nếu bạn cần ôn lại phương pháp này.
+
+ * Thông tin bên lề (Trivia)!
+ 
+ * Người học có óc quan sát sẽ nhận ra rằng các lệnh sau đây là tương đương:
+
+   ```sh
+   hacker@dojo:~$ echo hi | rev
+   ih
+   hacker@dojo:~$ echo hi > >(rev)
+   ih
+   ```
+   
+ * Có nhiều hơn một cách để dẫn đường ống dữ liệu! Tất nhiên, cách thứ hai khó đọc hơn nhiều và cũng khó mở rộng hơn. Ví dụ:
+
+   ```sh
+   hacker@dojo:~$ echo hi | rev | rev
+   hi
+   hacker@dojo:~$ echo hi > >(rev | rev)
+   hi
+   ```
+   
+ * Thật là ngớ ngẩn! Bài học ở đây là, mặc dù Thay thế Tiến trình là một công cụ mạnh mẽ trong hộp dụng cụ của bạn, nhưng nó là một công cụ rất chuyên biệt; đừng sử dụng nó cho mọi thứ!
+
+ * <img width="878" height="180" alt="image" src="https://github.com/user-attachments/assets/c48b32d1-c16c-4a8a-91f9-be99d80867be" />
+
+</details>
+
+
+<details>
+ <summary>🏴 <code>Split-piping stderr and stdout</code></summary>
+
+ * Bây giờ, hãy cùng kết hợp những kiến thức của bạn lại với nhau. Bạn phải làm chủ nhiệm vụ điều hướng (piping) tối thượng: chuyển hướng đầu ra tiêu chuẩn (stdout) sang một chương trình và đầu ra lỗi tiêu chuẩn (stderr) sang một chương trình khác.
+
+ * Thử thách ở đây, dĩ nhiên, là toán tử `|` chỉ liên kết stdout của lệnh bên trái với đầu vào tiêu chuẩn (stdin) của lệnh bên phải. Tất nhiên, bạn đã từng sử dụng `2>&1` để chuyển hướng stderr vào stdout và từ đó dẫn stderr đi qua ống dẫn, nhưng điều này lại làm trộn lẫn stderr và stdout với nhau. Làm thế nào để giữ chúng không bị trộn lẫn?
+
+ * Bạn sẽ cần kết hợp kiến thức của mình về `>()`, `2>`, và `|`. Cách thực hiện như thế nào là một nhiệm vụ mà tôi sẽ để lại cho bạn.
+
+ * Trong thử thách này, bạn có:
+
+   * `/challenge/hack`: lệnh này tạo ra dữ liệu trên cả stdout và stderr.
+
+   * `/challenge/the`: bạn phải chuyển hướng stderr của lệnh `hack` sang chương trình này.
+
+   * `/challenge/planet`: bạn phải chuyển hướng stdout của lệnh `hack` sang chương trình này.
+
+ * Hãy đi lấy cờ (flag) về nào!
+
+ * BONUS: Để tăng thêm một chút độ khó, hãy tìm một giải pháp mà không sử dụng toán tử `|`.
+
+ * <img width="864" height="110" alt="image" src="https://github.com/user-attachments/assets/7a72d03c-5957-4447-9836-c113e6b99e49" />
+
+ * <img width="893" height="115" alt="image" src="https://github.com/user-attachments/assets/8ff4c6c8-83da-4e6b-9f4a-2371433fbd87" />
+
+
+</details>
+
+
+<details>
+ <summary>🏴 <code>Named pipes</code></summary>
+
+ * Dưới đây là bản dịch sát nghĩa và chi tiết toàn bộ nội dung văn bản của bạn:
+
+ * Bạn đã học về các đường ống (pipes) sử dụng `|`, và bạn đã thấy rằng quá trình thay thế tiến trình (process substitution) tạo ra các đường ống có tên tạm thời (named pipes) (như `/dev/fd/63`). Bạn cũng có thể tự tạo ra các đường ống có tên cố định (persistent named pipes) tồn tại lâu dài trên hệ thống tệp! Chúng được gọi là FIFO, viết tắt của First (byte) In, First (byte) Out (Byte vào đầu tiên, Byte ra đầu tiên).
+
+ * Bạn tạo một FIFO bằng cách sử dụng lệnh `mkfifo`:
+
+   ```Bash
+   hacker@dojo:~$ mkfifo my_pipe
+   hacker@dojo:~$ ls -l my_pipe
+   prw-r--r-- 1 hacker hacker 0 Jan 1 12:00 my_pipe
+   hacker@dojo:~$ ls -l some_file
+   -rw-r--r-- 1 hacker hacker 0 Jan 1 12:00 some_file
+   hacker@dojo:~$
+   ```
+   
+ * Hãy chú ý chữ `p` ở đầu phần các quyền (permissions) - điều đó chỉ ra rằng nó là một đường ống! Điều này khác biệt rõ rệt so với dấu `-` nằm ở đầu của các tệp bình thường, chẳng hạn như `some_file` trong ví dụ trên.
+
+ * Khác với các đường ống có tên tự động từ thay thế tiến trình:
+
+   * Bạn kiểm soát được vị trí nơi các FIFO được tạo ra.
+
+   * Chúng tồn tại cố định cho đến khi bạn xóa chúng.
+
+   * Bất kỳ tiến trình nào cũng có thể ghi vào chúng thông qua đường dẫn (ví dụ: `echo hi > my_pipe`).
+
+   * Bạn có thể nhìn thấy chúng bằng lệnh `ls` và kiểm tra chúng giống như các tệp.
+
+ * Một vấn đề với các FIFO là chúng sẽ "chặn" (block) bất kỳ hoạt động nào trên chúng cho đến khi cả phía đọc (read side) và phía ghi (write side) của đường ống đều sẵn sàng. Ví dụ, hãy xem xét trường hợp này:
+
+   ```Bash
+   hacker@dojo:~$ mkfifo myfifo
+   hacker@dojo:~$ echo pwn > myfifo
+   ```
+   
+ * Để phục vụ lệnh `echo pwn > myfifo`, bash sẽ mở tệp `myfifo` ở chế độ ghi (write mode). Tuy nhiên, thao tác này sẽ bị treo (hang) cho đến khi có một thứ gì đó cũng mở tệp này ở chế độ đọc (read mode) (từ đó hoàn thành đường ống). Việc đó có thể được thực hiện ở một bảng điều khiển (console) khác:
+
+   ```Bash
+   hacker@dojo:~$ cat myfifo
+   pwn 
+   hacker@dojo:~$
+   ```
+   
+ * Chuyện gì đã xảy ra ở đây? Khi chúng ta chạy lệnh `cat myfifo`, đường ống đã có cả hai phía kết nối sẵn sàng, và được bỏ chặn (unblocked), cho phép lệnh `echo pwn > myfifo` chạy, từ đó gửi chuỗi `pwn` vào đường ống, nơi nó được lệnh `cat` đọc.
+
+ * Tất nhiên, điều này phần nào cũng có thể được thực hiện bởi các tệp bình thường: bạn đã học cách dùng lệnh `echo` để đưa nội dung vào chúng và dùng lệnh `cat` để xuất nội dung ra. Tại sao lại dùng FIFO thay thế? Dưới đây là những điểm khác biệt chính:
+
+   * **Không lưu trữ trên ổ đĩa** (No disk storage): FIFO truyền dữ liệu trực tiếp giữa các tiến trình trong bộ nhớ - không có gì được lưu vào ổ đĩa.
+
+   * **Dữ liệu tạm thời** (Ephemeral data): Một khi dữ liệu được đọc khỏi một FIFO, nó sẽ biến mất (không giống như các tệp nơi dữ liệu được lưu trữ lâu dài).
+
+   * **Tự động đồng bộ hóa** (Automatic synchronization): Phía ghi sẽ bị chặn cho đến khi phía đọc sẵn sàng, và ngược lại. Điều này thực sự hữu ích! Nó cung cấp sự đồng bộ hóa tự động. Hãy xem xét ví dụ ở trên: với một FIFO, không quan trọng lệnh `cat myfifo` hay `echo pwn > myfifo` được thực thi trước; mỗi lệnh sẽ chỉ đợi lệnh kia. Với các tệp bình thường, bạn cần đảm bảo thực thi lệnh ghi trước lệnh đọc.
+
+   * **Luồng dữ liệu phức tạp** (Complex data flows): FIFO rất hữu ích trong việc tạo điều kiện cho các luồng dữ liệu phức tạp, kết hợp và chia tách dữ liệu theo những cách linh hoạt, v.v. Ví dụ, FIFO hỗ trợ nhiều bên đọc và bên ghi.
+
+ * Thử thách này sẽ là một bài giới thiệu đơn giản về FIFO. Bạn sẽ cần tạo một tệp `/tmp/flag_fifo` và chuyển hướng đầu ra tiêu chuẩn (stdout) của `/challenge/run` vào đó. Nếu bạn thành công, `/challenge/run` sẽ ghi lá cờ (flag) vào FIFO! Hãy đi làm việc đó đi!
+
+ * GỢI Ý: Hành vi chặn (blocking) của FIFO làm cho việc giải quyết thử thách này trong một terminal (thiết bị đầu cuối) duy nhất trở nên khó khăn. Bạn có thể sẽ muốn sử dụng chế độ Desktop hoặc VSCode cho thử thách này để bạn có thể khởi chạy hai terminal.
+
+ * 
+
+
+</details>
