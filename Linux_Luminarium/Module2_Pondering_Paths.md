@@ -12,23 +12,23 @@
 
     Các máy tính lưu trữ dữ liệu trong các tệp.
 
-  * **Directories**
+  * **Directories(Danh mục)**
 
     Bạn không thể cứ để các tệp nằm rải rác một cách ngẫu nhiên được... Bạn sẽ chẳng bao giờ có thể tìm thấy bất cứ thứ gì!
 
     Các máy tính lưu trữ các tệp trong các thư mục bên trong hệ thống tệp. Mỗi thư mục có thể chứa nhiều tệp, giống như một cái hộp.
 
-  * **Nesting Directories** 
+  * **Nesting Directories(Thư mục lồng nhau)** 
 
     Để tổ chức tốt hơn, các thư mục có thể được lưu trữ trong các thư mục khác!
 
-  * **The "root" Directory**
+  * **The "root" Directory(Thư mục "gốc")**
 
     "Luôn có một cái hộp lớn hơn"... cho đến khi không còn nữa.
 
     Trong Linux, các thư mục được lưu trữ trong các thư mục khác, đến lượt chúng lại được lưu trữ trong các thư mục khác nữa. Điều này không thể tiếp diễn mãi mãi. Cái hộp "ngoài cùng" là / (được gọi là thư mục "gốc").
 
-  * **A "path"**
+  * **A "path"(Đường dẫn)**
 
     Con đường, chà, xuyên qua các thư mục lồng nhau này mà máy tính nên đi theo để tìm thấy tệp hoặc thư mục của bạn được gọi là một "đường dẫn" (path).
 
@@ -37,7 +37,7 @@
     /UserData/YansData/Personal/Cooking/PumpkinPieRecipe
     ```
   
-  * **The Typical File System Layout**
+  * **The Typical File System Layout(Bố cục hệ thống tập tin điển hình)**
 
     Linux có một bố cục hệ thống tệp được tiêu chuẩn hóa.
     |Tên thư mục|Mô tả|
@@ -54,7 +54,7 @@
     |`/proc`|Dữ liệu tiến trình thời gian chạy(runtime process data).|
     |`/tmp`|Nơi lưu trữ dữ liệu tạm thời.|
 
-  * **Navigating The File System**
+  * **Navigating The File System(Điều hướng hệ thống tệp tin)**
 
     Mỗi tiến trình đều có một "thư mục làm việc hiện tại" (current working directory): thư mục mà nó đang xem xét vào thời điểm hiện tại. Bạn có thể xem nó bằng lệnh `pwd` (và nó thường hiển thị trong dấu nhắc lệnh của bạn) và thay đổi nó bằng lệnh `cd`.
 
@@ -79,13 +79,13 @@
     yans@asdf:/$
     ```
 
-  * **Specifying paths...**
+  * **Specifying paths...(Chỉ định đường dẫn)**
 
     Có hai cách để chỉ định các đường dẫn:
 
-    **Các đường dẫn tuyệt đối** (Absolute Paths) bắt đầu bằng `/`, chẳng hạn như `/usr`, `/home/yans/flags/TOPSECRET`, v.v.
+    **Absolute Paths (Các đường dẫn tuyệt đối)** bắt đầu bằng `/`, chẳng hạn như `/usr`, `/home/yans/flags/TOPSECRET`, v.v.
 
-    **Các đường dẫn tương đối** (Relative Paths) không bắt đầu bằng `/`, và có tính tương đối dựa trên thư mục làm việc hiện tại.
+    **Relative Paths (Các đường dẫn tương đối)** không bắt đầu bằng `/`, và có tính tương đối dựa trên thư mục làm việc hiện tại.
 
     ```sh
     yans@asdf ~ $ ls /home/yans/flags           <- Absolute path!
@@ -102,7 +102,7 @@
     yans@asdf ~/flags $ █
     ```
 
-  * **Closer look: Paths**
+  * **Closer look: Paths(Xem xét kĩ hơn các đường dẫn)**
 
     Một "đường dẫn" chứa:
      * Một dấu `/` có thể có ở đầu (leading) để chỉ định rằng đường dẫn là tuyệt đối (bắt đầu tại gốc).
@@ -123,7 +123,7 @@
 </details>
 
 <details>
-  <summary>🏴 <code>The Root</code></summary>
+  <summary>🏴 <code>The Root(Gốc rễ)</code></summary>
 
   * Được rồi, vậy là hệ thống tệp bắt đầu tại `/`. Dưới đó, có cả một mớ các thư mục khác, các tệp cấu hình, các chương trình, và, quan trọng nhất, các cờ (flags). Trong cấp độ này, chúng tôi đã thêm một chương trình ngay trong `/`, có tên là `pwn`, chương trình này sẽ cấp cho bạn cờ. Tất cả những gì bạn cần làm trong cấp độ này là gọi (invoke) chương trình này!
 
@@ -136,7 +136,7 @@
 </details>
 
 <details>
-  <summary>🏴 <code>Program and absolute paths</code></summary>
+<summary>🏴 <code>Program and absolute paths(Đường dẫn chương trình và đường dẫn tuyệt đối)</code></summary>
 
   * Hãy cùng khám phá một đường dẫn phức tạp hơn một chút! Ngoại trừ trong cấp độ trước, các thử thách trong pwn.college nằm trong thư mục `challenge` và đến lượt nó, thư mục `challenge` lại nằm ngay trong thư mục gốc (`/`). Do đó, đường dẫn đến thư mục thử thách là `/challenge`. Tên của chương trình thử thách trong cấp độ này là `run`, và nó nằm trong thư mục `/challenge`. Do đó, đường dẫn đến chương trình thử thách `run` là `/challenge/run`.
 
@@ -148,7 +148,7 @@
 
 
 <details>
-  <summary>🏴 <code>Posotion thy self</code></code></summary>
+  <summary>🏴 <code>Posotion thy self(Đặt mình vào vị trí thích hợp)</code></code></summary>
 
   * Hệ thống tệp Linux có vô số thư mục với vô số tệp. Bạn có thể điều hướng qua lại giữa các thư mục bằng cách sử dụng lệnh cd (change directory - thay đổi thư mục) và truyền một đường dẫn cho nó như một đối số, giống như thế này:
     ```sh
@@ -167,7 +167,7 @@
 
 
 <details>
-  <summary>🏴 <code>Postion elsewhere</code></summary>
+  <summary>🏴 <code>Postion elsewhere(Vị trí khác)</code></summary>
 
   * Same thing, but 5 times!
 
@@ -177,7 +177,7 @@
 
 
 <details>
-  <summary>🏴 <code>implict relative paths, from /</code></summary>
+  <summary>🏴 <code>implict relative paths, from /(Các đường dẫn tương đối ngầm định,từ /)</code></summary>
 
    * Bây giờ bạn đã quen thuộc với khái niệm tham chiếu đến các đường dẫn tuyệt đối (absolute paths) và thay đổi các thư mục. Nếu bạn đưa vào các đường dẫn tuyệt đối ở khắp mọi nơi, thì việc bạn đang ở thư mục nào thực sự không quan trọng, như bạn có lẽ đã nhận ra trong ba thử thách trước.
 
@@ -206,7 +206,7 @@
 </details>
 
 <details>
-  <summary>🏴 <code>explicit relative paths, from /</code></summary>
+  <summary>🏴 <code>explicit relative paths, from /(Các đường dẫn tương đối rõ ràng,từ /)</code></summary>
 
   * Trước đây, đường dẫn tương đối của bạn là "trần trụi" (naked): nó chỉ định trực tiếp thư mục để đi sâu xuống từ thư mục hiện tại. Trong cấp độ này, chúng ta sẽ khám phá các đường dẫn tương đối tường minh (explicit) hơn.
 
@@ -236,7 +236,7 @@
 
 
 <details>
-  <summary>🏴 <code>implicit relative path</code></summary>
+  <summary>🏴 <code>implicit relative path(Các đường dẫn tương đối ngầm định)</code></summary>
 
   * Trong cấp độ này, chúng ta sẽ thực hành việc tham chiếu đến các đường dẫn bằng cách sử dụng `.` nhiều hơn một chút. Thử thách này sẽ cần bạn chạy nó từ thư mục `/challenge`. Ở đây, mọi thứ trở nên hơi lắt léo một chút.
 
